@@ -1,13 +1,18 @@
+import os
 import psycopg
+from dotenv import load_dotenv
+
+# Load environment variables from backend/.env when running locally
+load_dotenv()
 
 
-DATABASE_URL = (
-    "dbname=resume_parser_db "
-    "user=postgres "
-    "password=Jammu@123 "
-    "host=localhost "
-    "port=5432"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL environment variable is not configured."
+    )
 
 
 def get_connection():
