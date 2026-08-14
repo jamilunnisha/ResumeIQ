@@ -1,0 +1,69 @@
+# ==============================
+# Environment variables / secrets
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# ==============================
+# Node / React
+# ==============================
+node_modules/
+dist/
+build/
+.vite/
+
+# ==============================
+# IDE / OS
+# ==============================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Python / test caches
+# ==============================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ==============================
+# Logs
+# ==============================
+*.log
+
+# ==============================
+# Local databases
+# ==============================
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded/generated files
+# ==============================
+backend/uploads/
+uploads/
+resumes/
+
+# ==============================
+# Temporary files
+# ==============================
+*.tmp
+*.temp
+# Generated database/export files
+database/parsed_resumes.xlsx
