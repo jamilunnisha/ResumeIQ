@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 import {
   UploadCloud,
@@ -23,8 +23,6 @@ import {
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
-
-const API_URL = "http://127.0.0.1:8000";
 
 
 // ==================================================
@@ -254,126 +252,76 @@ function UploadResume({ onNavigate }) {
 
   const handleUpload = async () => {
 
-    if (!file) {
+  if (!file) {
+    setError(
+      "Please select a PDF resume first."
+    );
+    return;
+  }
+
+  const token = getAuthToken();
+
+  if (!token) {
+    setError(
+      "Authentication required. Please log in again."
+    );
+    return;
+  }
+
+  try {
+    setUploading(true);
+    setError("");
+    setResult(null);
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    const response = await API.post(
+      "/upload-resume",
+      formData
+    );
+
+    console.log(
+      "Resume upload response:",
+      response.data
+    );
+
+    setResult(response.data);
+
+  } catch (err) {
+
+    console.error(
+      "Resume upload failed:",
+      err
+    );
+
+    if (err.response?.status === 401) {
 
       setError(
-        "Please select a PDF resume first."
+        "Your session has expired. Please log in again."
       );
 
-      return;
+      localStorage.removeItem(
+        "resumeiq_token"
+      );
 
-    }
+      sessionStorage.removeItem(
+        "resumeiq_token"
+      );
 
-
-    // ----------------------------------------------
-    // GET JWT TOKEN
-    // ----------------------------------------------
-
-    const token = getAuthToken();
-
-
-    if (!token) {
+    } else {
 
       setError(
-        "Authentication required. Please log in again."
+        err.response?.data?.detail ||
+        "Unable to process the resume. Please try again."
       );
-
-      return;
-
     }
 
-
-    try {
-
-      setUploading(true);
-
-      setError("");
-
-      setResult(null);
-
-
-      const formData =
-        new FormData();
-
-
-      formData.append(
-        "file",
-        file
-      );
-
-
-      // ----------------------------------------------
-      // AUTHENTICATED API REQUEST
-      // ----------------------------------------------
-
-      const response =
-        await axios.post(
-          `${API_URL}/upload-resume`,
-          formData,
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-
-      console.log(
-        "Resume upload response:",
-        response.data
-      );
-
-
-      setResult(
-        response.data
-      );
-
-
-    } catch (err) {
-
-      console.error(
-        "Resume upload failed:",
-        err
-      );
-
-
-      // ----------------------------------------------
-      // AUTHENTICATION ERROR
-      // ----------------------------------------------
-
-      if (
-        err.response?.status === 401
-      ) {
-
-        setError(
-          "Your session has expired. Please log in again."
-        );
-
-
-        localStorage.removeItem(
-          "resumeiq_authenticated"
-        );
-
-
-      } else {
-
-        setError(
-          err.response?.data?.detail ||
-          "Unable to process the resume. Please try again."
-        );
-
-      }
-
-
-    } finally {
-
-      setUploading(false);
-
-    }
-
-  };
-
+  } finally {
+    setUploading(false);
+  }
+};
 
   // ==================================================
   // RESET
