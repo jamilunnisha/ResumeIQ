@@ -16,7 +16,14 @@ const API = axios.create({
 const getAuthToken = () => {
   return (
     localStorage.getItem("resumeiq_token") ||
-    sessionStorage.getItem("resumeiq_token")
+    localStorage.getItem("resumeiq_access_token") ||
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("resumeiq_token") ||
+    sessionStorage.getItem("resumeiq_access_token") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("token") ||
+    ""
   );
 };
 
