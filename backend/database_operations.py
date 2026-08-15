@@ -6,12 +6,28 @@ from database import get_connection
 # ==================================================
 
 def ensure_candidate_user_column():
-
     connection = get_connection()
 
     try:
-
         with connection.cursor() as cursor:
+
+            cursor.execute(
+                """
+                CREATE TABLE IF NOT EXISTS candidates
+                (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER,
+                    name VARCHAR(255),
+                    email VARCHAR(255),
+                    phone VARCHAR(100),
+                    experience TEXT,
+                    skills TEXT,
+                    resume_filename TEXT,
+                    status VARCHAR(50) DEFAULT 'New',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+                """
+            )
 
             cursor.execute(
                 """
