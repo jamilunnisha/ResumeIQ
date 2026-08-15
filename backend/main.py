@@ -101,6 +101,7 @@ app.add_middleware(
     "http://127.0.0.1:5173",
     "https://resume-iq-sepia-beta.vercel.app",
     "https://resume-o0qicjzx-jamilunnishas-projects.vercel.app",
+    "https://resume-iq-three-xi.vercel.app",
 ],
 
     allow_credentials=True,
