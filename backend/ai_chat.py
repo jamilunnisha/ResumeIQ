@@ -1,3 +1,4 @@
+import os
 import requests
 import time
 import re
@@ -14,10 +15,20 @@ from database_operations import (
 # OLLAMA CONFIGURATION
 # ==================================================
 
-OLLAMA_URL = "http://127.0.0.1:11434/api/chat"
+OLLAMA_URL = os.getenv(
+    "OLLAMA_URL",
+    "http://127.0.0.1:11434/api/chat"
+)
 
-MODEL_NAME = "llama3.2:3b"
+OLLAMA_API_KEY = os.getenv(
+    "OLLAMA_API_KEY",
+    ""
+)
 
+MODEL_NAME = os.getenv(
+    "OLLAMA_MODEL",
+    "gpt-oss:20b"
+)
 
 # ==================================================
 # RESUMEIQ AI INSTRUCTIONS
@@ -1760,26 +1771,20 @@ def ask_resumeiq_ai_with_context(
         response = requests.post(
             OLLAMA_URL,
 
+            headers={
+                "Authorization": f"Bearer {OLLAMA_API_KEY}",
+                "Content-Type": "application/json",
+            },
+
             json={
-                "model":
-                    MODEL_NAME,
-
-                "messages":
-                    messages,
-
-                "stream":
-                    False,
+                "model": MODEL_NAME,
+                "messages": messages,
+                "stream": False,
 
                 "options": {
-
-                    "temperature":
-                        0.2,
-
-                    "num_predict":
-                        100,
-
-                    "num_ctx":
-                        2048,
+                    "temperature": 0.2,
+                    "num_predict": 100,
+                    "num_ctx": 2048,
                 },
             },
 
